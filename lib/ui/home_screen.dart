@@ -90,7 +90,7 @@ class Home extends StatelessWidget {
                   ],
                 ),
                 RowHeading(
-                  title: "TOP RATEd",
+                  title: "TOP RATED",
                 ),
               ],),
             ),
