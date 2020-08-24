@@ -16,7 +16,7 @@ class Api {
     }
     http.Response searchResponse = await http.get(searchUrl);
     var jsonData = jsonDecode(searchResponse.body);
-    List<Map<String, dynamic>> results;
+    var results;
     if (searchResponse.statusCode == 200) {
       results = jsonData["results"];
     } else {
@@ -29,7 +29,7 @@ class Api {
     String getUrl = "$baseUrl/trending/$mediaType/$timeWindow?api_key=$apiKey";
     http.Response trendingResponse = await http.get(getUrl);
     var jsonData = jsonDecode(trendingResponse.body);
-    List<Map<String, dynamic>> results;
+   var results;
     if (trendingResponse.statusCode == 200) {
       results = jsonData["results"];
     } else {
@@ -37,4 +37,23 @@ class Api {
     }
     return results;
   }
+    discover() async {
+    String getUrl =
+        "$baseUrl/discover/movie?api_key=$apiKey&language=en-US&sort_by=popularity.desc";
+    http.Response discoverResponse = await http.get(getUrl);
+    var jsonData = jsonDecode(discoverResponse.body);
+    var discoverResults;
+    if (discoverResponse.statusCode == 200) {
+      discoverResults = jsonData["results"];
+    }else{
+      discoverResults = jsonData["status_message"];
+    }
+    return discoverResults;
+  }
+  // /movie/{movie_id}
+  getMovieDetails(String movieId){
+
+  }
+  // /tv/{tv_id}
+  getTvShowDetails(String showId){}
 }
