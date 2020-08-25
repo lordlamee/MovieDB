@@ -1,0 +1,4 @@
+class TrendingController {
+  trendingMoviesDaily() {}
+  trendingMoviesWeekly() {}
+}

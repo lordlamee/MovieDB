@@ -7,7 +7,7 @@ class Api {
   String baseUrl = "https://api.themoviedb.org/3";
   String imageBaseUrl = "https://image.tmdb.org/t/p/w500";
 
-  Future<dynamic> searchMovie({String query, SearchType searchType}) async {
+  Future<dynamic> search({String query, SearchType searchType}) async {
     String searchUrl;
     if (searchType == SearchType.movie) {
       searchUrl = "$baseUrl/search/movie?api_key=$apiKey&query=$query";
@@ -18,7 +18,10 @@ class Api {
     var jsonData = jsonDecode(searchResponse.body);
     var results;
     if (searchResponse.statusCode == 200) {
-      results = jsonData["results"];
+      results = {
+        "status": "success",
+        results: jsonData["results"],
+      };
     } else {
       results = jsonData["status_message"];
     }
@@ -29,7 +32,7 @@ class Api {
     String getUrl = "$baseUrl/trending/$mediaType/$timeWindow?api_key=$apiKey";
     http.Response trendingResponse = await http.get(getUrl);
     var jsonData = jsonDecode(trendingResponse.body);
-   var results;
+    var results;
     if (trendingResponse.statusCode == 200) {
       results = jsonData["results"];
     } else {
@@ -37,23 +40,69 @@ class Api {
     }
     return results;
   }
-    discover() async {
+
+  discover() async {
     String getUrl =
         "$baseUrl/discover/movie?api_key=$apiKey&language=en-US&sort_by=popularity.desc";
     http.Response discoverResponse = await http.get(getUrl);
     var jsonData = jsonDecode(discoverResponse.body);
     var discoverResults;
     if (discoverResponse.statusCode == 200) {
-      discoverResults = jsonData["results"];
-    }else{
-      discoverResults = jsonData["status_message"];
+      discoverResults = {
+        "status": "success",
+        "results": jsonData["results"],
+      };
+    } else {
+      discoverResults = {
+        "status": "fail",
+        "status_message": jsonData["status_message"],
+      };
     }
     return discoverResults;
   }
-  // /movie/{movie_id}
-  getMovieDetails(String movieId){
 
+  getMovieDetails(String movieId) async {
+    String getUrl = "$baseUrl/movie/$movieId?api_key=$apiKey";
+    http.Response getResponse = await http.get(getUrl);
+    var jsonData = jsonDecode(getResponse.body);
+    var movieDetails;
+    if (getResponse.statusCode == 200) {
+      movieDetails = jsonData;
+    } else {
+      movieDetails = jsonData["status_message"];
+    }
+    return movieDetails;
   }
-  // /tv/{tv_id}
-  getTvShowDetails(String showId){}
+
+  getTvShowDetails(String showId) async {
+    String getUrl = "$baseUrl/tv/$showId?api_key=$apiKey";
+    http.Response tvShowResponse = await http.get(getUrl);
+    var jsonData = jsonDecode(tvShowResponse.body);
+    var tvShowDetails;
+    if (tvShowResponse.statusCode == 200) {
+      tvShowDetails = {
+        "status": "success",
+        "results": jsonData,
+      };
+    } else {
+      tvShowDetails = jsonData["status_message"];
+    }
+    return tvShowDetails;
+  }
+
+  getMovieRecommendations(String movieId) async {
+    String getUrl = "$baseUrl/movie/$movieId/recommendations?api_key=$apiKey";
+    http.Response recommendationResponse = await http.get(getUrl);
+    var jsonData = jsonDecode(recommendationResponse.body);
+    var recommendations;
+    if (recommendationResponse.statusCode == 200) {
+      recommendations = {
+        "status": "success",
+        "results": jsonData["results"],
+      };
+    } else {
+      recommendations = jsonData["status_message"];
+    }
+    return recommendations;
+  }
 }
