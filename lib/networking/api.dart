@@ -1,5 +1,5 @@
 import 'package:http/http.dart' as http;
-import 'package:movie_app/components/models/enums/search_type_enum.dart';
+import 'package:movie_app/models/enums/search_type_enum.dart';
 import 'package:movie_app/networking/keys.dart';
 import 'dart:convert';
 
@@ -7,7 +7,7 @@ class Api {
   String baseUrl = "https://api.themoviedb.org/3";
   String imageBaseUrl = "https://image.tmdb.org/t/p/w500";
 
-  Future<dynamic> search({String query, SearchType searchType}) async {
+  Future search({String query, SearchType searchType}) async {
     String searchUrl;
     if (searchType == SearchType.movie) {
       searchUrl = "$baseUrl/search/movie?api_key=$apiKey&query=$query";
@@ -28,15 +28,21 @@ class Api {
     return results;
   }
 
-  Future<dynamic> getTrending({String timeWindow, String mediaType}) async {
+  Future getTrending({String timeWindow, String mediaType}) async {
     String getUrl = "$baseUrl/trending/$mediaType/$timeWindow?api_key=$apiKey";
     http.Response trendingResponse = await http.get(getUrl);
     var jsonData = jsonDecode(trendingResponse.body);
     var results;
     if (trendingResponse.statusCode == 200) {
-      results = jsonData["results"];
+      results = {
+        "status": "success",
+        "results": jsonData["results"],
+      };
     } else {
-      results = jsonData["status_message"];
+      results = {
+        "status": "fail",
+        "status_message": jsonData["status_message"],
+      };
     }
     return results;
   }
@@ -46,7 +52,7 @@ class Api {
         "$baseUrl/discover/movie?api_key=$apiKey&language=en-US&sort_by=popularity.desc";
     http.Response discoverResponse = await http.get(getUrl);
     var jsonData = jsonDecode(discoverResponse.body);
-    var discoverResults;
+    dynamic discoverResults;
     if (discoverResponse.statusCode == 200) {
       discoverResults = {
         "status": "success",
@@ -101,7 +107,10 @@ class Api {
         "results": jsonData["results"],
       };
     } else {
-      recommendations = jsonData["status_message"];
+      recommendations = {
+        "status": "fail",
+        "results": jsonData["status_message"],
+      };
     }
     return recommendations;
   }
