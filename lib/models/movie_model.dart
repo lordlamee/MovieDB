@@ -5,6 +5,8 @@ class Movie {
   String releaseDate;
   String movieId;
   String overview;
+  String tagLine;
+  dynamic genres;
   Movie({
     this.movieName,
     this.movieId,
@@ -12,6 +14,8 @@ class Movie {
     this.imageUrl,
     this.rating,
     this.releaseDate,
+    this.tagLine,
+    this.genres,
   });
 
   Movie.fromJson(Map<String, dynamic> jsonData) {
@@ -21,5 +25,7 @@ class Movie {
     imageUrl = jsonData["poster_path"].toString();
     releaseDate = jsonData["release_date"].toString();
     rating = jsonData["vote_average"].toString();
+    tagLine = jsonData["tagline"].toString();
+    genres = jsonData["genres"];
   }
 }

@@ -2,8 +2,18 @@ import 'package:flutter/material.dart';
 
 class PageIndicatorProvider extends ChangeNotifier {
   int selectedDiscoverPage = 0;
-  pageIndicator(pageIndex) {
+  pageIndicator(int pageIndex) {
     selectedDiscoverPage = pageIndex;
+    notifyListeners();
+  }
+
+  increaseIndex() {
+    selectedDiscoverPage++;
+    notifyListeners();
+  }
+
+  setIndex(int index) {
+    selectedDiscoverPage = index;
     notifyListeners();
   }
 }

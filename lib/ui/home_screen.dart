@@ -1,12 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:movie_app/components/widgets/discover_card.dart';
+import 'package:movie_app/components/widgets/movie_card.dart';
 import 'package:movie_app/controllers/discover_controller.dart';
 import 'package:movie_app/controllers/trending_controller.dart';
 import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/provider/page_indicator_provider.dart';
 import 'package:movie_app/utilities/constants.dart';
 import 'package:movie_app/utilities/styles.dart' as Style;
-import 'package:movie_app/utilities/widgets/discover_card.dart';
-import 'package:movie_app/utilities/widgets/movie_card.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -16,27 +18,49 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   PageController _discoverController = PageController();
-  List<DiscoverCard> discoverMovies = [];
+  List<Movie> discoverMovies = [];
   String errorMessage;
+  bool loadingDiscover = true;
   List<MovieCard> trendingToday = [];
   List<MovieCard> trendingThisWeek = [];
   @override
   void initState() {
     super.initState();
-//    WidgetsBinding.instance.addPostFrameCallback((_) {
-//      Timer.periodic(Duration(seconds: 4), (timer) {
-//        if (discoverIndex < 2) {
-//          discoverIndex++;
-//        } else {
-//          discoverIndex = 0;
-//        }
-//        _discoverController.animateToPage(
-//          discoverIndex,
-//          duration: Duration(milliseconds: 500),
-//          curve: Curves.decelerate,
-//        );
-//      });
-    // });
+    Future(() async {
+      final discover = await DiscoverController().handleDiscoverItems();
+      discoverMovies = discover["items"];
+      setState(() {
+        loadingDiscover = false;
+      });
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Timer.periodic(Duration(seconds: 4), (timer) {
+        if (discoverMovies.isNotEmpty) {
+          if (Provider.of<PageIndicatorProvider>(context, listen: false)
+                  .selectedDiscoverPage <
+              2) {
+            Provider.of<PageIndicatorProvider>(context, listen: false)
+                .increaseIndex();
+          } else {
+            Provider.of<PageIndicatorProvider>(context, listen: false)
+                .setIndex(0);
+          }
+          assert(discoverMovies.isNotEmpty);
+          _discoverController.animateToPage(
+            Provider.of<PageIndicatorProvider>(context, listen: false)
+                .selectedDiscoverPage,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.decelerate,
+          );
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _discoverController.dispose();
+    super.dispose();
   }
 
   @override
@@ -82,25 +106,18 @@ class _HomeState extends State<Home> {
               ),
               Container(
                 height: 250,
-                child: FutureBuilder(
-                    future: DiscoverController().handleDiscoverItems(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        if (!snapshot.hasError) {
-                          List<DiscoverCard> movieList = [];
-                          if (!snapshot.hasData) if (snapshot.data["status"] ==
-                              "success") {
-                            for (Movie discoverMovie
-                                in snapshot.data["items"]) {
-                              print(discoverMovie.movieName);
-                              print("is it null ni");
-                              DiscoverCard discoverCard = DiscoverCard(
-                                movie: discoverMovie,
-                              );
-                              movieList.add(discoverCard);
-                            }
-                          }
-                          return PageView(
+                child:
+//                FutureBuilder(
+//                    future: DiscoverController().handleDiscoverItems(),
+//                    builder: (context, snapshot) {
+//                      if (snapshot.connectionState == ConnectionState.done) {
+//                        if (!snapshot.hasError) {
+//                          return
+                    loadingDiscover
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : PageView(
                             controller: _discoverController,
                             onPageChanged: (index) {
                               Provider.of<PageIndicatorProvider>(context,
@@ -110,24 +127,25 @@ class _HomeState extends State<Home> {
                             children: [
                               for (int i = 0; i < 3; i++)
                                 DiscoverCard(
-                                  movie: snapshot.data["items"][i],
-                                )
+                                  movie: discoverMovies[i],
+                                ),
                             ],
-                          );
-                        } else {
-                          return Container(
-                            child: Center(
-                              child: Text(
-                                snapshot.error.toString(),
-                                style: Style.defaultTextStyle,
-                              ),
-                            ),
-                          );
-                        }
-                      } else {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                    }),
+                          ),
+//    ;
+//                        } else {
+//                          return Container(
+//                            child: Center(
+//                              child: Text(
+//                                snapshot.error.toString(),
+//                                style: Style.defaultTextStyle,
+//                              ),
+//                            ),
+//                          );
+//                        }
+//                      } else {
+//                        return Center(child: CircularProgressIndicator());
+//                      }
+//                    }),
               ),
               Consumer<PageIndicatorProvider>(
                 builder: (context, provider, child) => Row(

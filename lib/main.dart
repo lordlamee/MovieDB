@@ -13,6 +13,7 @@ class MovieApp extends StatelessWidget {
     return ChangeNotifierProvider<PageIndicatorProvider>(
       create: (context) => PageIndicatorProvider(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Home(),
       ),
     );

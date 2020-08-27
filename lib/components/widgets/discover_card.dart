@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/models/movie_model.dart';
+import 'package:movie_app/utilities/constants.dart';
 import 'package:movie_app/utilities/styles.dart' as Style;
-
-import '../constants.dart';
 
 class DiscoverCard extends StatelessWidget {
   const DiscoverCard({
