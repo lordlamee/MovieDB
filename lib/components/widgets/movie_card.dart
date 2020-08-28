@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/controllers/movie_detail_controller.dart';
 import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/ui/movie_details.dart';
+import 'package:movie_app/utilities/constants.dart';
+import 'package:movie_app/utilities/indicator/indicators.dart';
 import 'package:movie_app/utilities/styles.dart' as Style;
 
 class MovieCard extends StatelessWidget {
@@ -10,12 +13,19 @@ class MovieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
+        Indicator.loading(context);
+        Movie movieDetail =
+            await MovieDetailController().getMovieDetails(movie.movieId);
+        Indicator.popIndicator(context);
         Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => MovieDetail(),
-            ));
+          context,
+          CupertinoPageRoute(
+            builder: (context) => MovieDetail(
+              movie: movieDetail,
+            ),
+          ),
+        );
       },
       child: Container(
         width: 118,
@@ -28,8 +38,7 @@ class MovieCard extends StatelessWidget {
               width: 118,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(
-                      "https://image.tmdb.org/t/p/w500${movie.imageUrl}"),
+                  image: NetworkImage("$movieBaseUrl${movie.imageUrl}"),
                   fit: BoxFit.fill,
                 ),
                 color: Style.themeWhite,

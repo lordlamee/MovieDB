@@ -6,12 +6,13 @@ class Indicator {
       context: context,
       builder: (context) => SimpleDialog(
         children: [
-          CircularProgressIndicator(),
+          Center(child: CircularProgressIndicator()),
         ],
       ),
     );
   }
-  static popIndicator(BuildContext context){
+
+  static popIndicator(BuildContext context) {
     Navigator.pop(context);
   }
 }

@@ -14,13 +14,20 @@ class SearchController {
           Movie movie = Movie.fromJson(movieData);
           movies.add(movie);
         }
-        return movies;
+        return {"status": "success", "results": movies};
       } else {
         //:Todo Implement TV shows search results
         return null;
       }
     } else {
-      return searchResults;
+      return {"status_message": searchResults};
+    }
+  }
+
+  getSearchResults(query, List<Movie> movies) async {
+    var searchResponse = await handleSearch(query, SearchType.movie);
+    if (searchResponse["status"] == "success") {
+      movies = searchResponse["results"];
     }
   }
 }

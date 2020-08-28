@@ -20,7 +20,7 @@ class Api {
     if (searchResponse.statusCode == 200) {
       results = {
         "status": "success",
-        results: jsonData["results"],
+        "results": jsonData["results"],
       };
     } else {
       results = jsonData["status_message"];
@@ -73,9 +73,12 @@ class Api {
     var jsonData = jsonDecode(getResponse.body);
     var movieDetails;
     if (getResponse.statusCode == 200) {
-      movieDetails = jsonData;
+      movieDetails = {"status": "success", "results": jsonData};
     } else {
-      movieDetails = jsonData["status_message"];
+      movieDetails = {
+        "status": "fail",
+        "status_message": jsonData["status_message"],
+      };
     }
     return movieDetails;
   }

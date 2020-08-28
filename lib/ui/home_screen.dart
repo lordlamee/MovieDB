@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/components/widgets/discover_card.dart';
 import 'package:movie_app/components/widgets/movie_card.dart';
@@ -7,6 +8,7 @@ import 'package:movie_app/controllers/discover_controller.dart';
 import 'package:movie_app/controllers/trending_controller.dart';
 import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/provider/page_indicator_provider.dart';
+import 'package:movie_app/ui/search_screen.dart';
 import 'package:movie_app/utilities/constants.dart';
 import 'package:movie_app/utilities/styles.dart' as Style;
 import 'package:provider/provider.dart';
@@ -19,10 +21,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   PageController _discoverController = PageController();
   List<Movie> discoverMovies = [];
-  String errorMessage;
   bool loadingDiscover = true;
-  List<MovieCard> trendingToday = [];
-  List<MovieCard> trendingThisWeek = [];
   @override
   void initState() {
     super.initState();
@@ -81,71 +80,53 @@ class _HomeState extends State<Home> {
                       Icons.menu,
                       color: Style.defaultWhite,
                     ),
-                    Icon(
-                      Icons.search,
-                      color: Style.defaultWhite,
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => SearchScreen(),
+                          ),
+                        );
+                      },
+                      child: Icon(
+                        Icons.search,
+                        color: Style.defaultWhite,
+                      ),
                     ),
                   ],
                 ),
               ),
-              InkResponse(
-                onTap: () async {
-                  var api = await TrendingController().trendingMoviesDaily();
-                  print(api);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                  child: Text(
-                    "Discover",
-                    style: Style.defaultTextStyle.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                    ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: Text(
+                  "Discover",
+                  style: Style.defaultTextStyle.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
                   ),
                 ),
               ),
               Container(
                 height: 250,
-                child:
-//                FutureBuilder(
-//                    future: DiscoverController().handleDiscoverItems(),
-//                    builder: (context, snapshot) {
-//                      if (snapshot.connectionState == ConnectionState.done) {
-//                        if (!snapshot.hasError) {
-//                          return
-                    loadingDiscover
-                        ? Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : PageView(
-                            controller: _discoverController,
-                            onPageChanged: (index) {
-                              Provider.of<PageIndicatorProvider>(context,
-                                      listen: false)
-                                  .pageIndicator(index);
-                            },
-                            children: [
-                              for (int i = 0; i < 3; i++)
-                                DiscoverCard(
-                                  movie: discoverMovies[i],
-                                ),
-                            ],
-                          ),
-//    ;
-//                        } else {
-//                          return Container(
-//                            child: Center(
-//                              child: Text(
-//                                snapshot.error.toString(),
-//                                style: Style.defaultTextStyle,
-//                              ),
-//                            ),
-//                          );
-//                        }
-//                      } else {
-//                        return Center(child: CircularProgressIndicator());
-//                      }
-//                    }),
+                child: loadingDiscover
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : PageView(
+                        controller: _discoverController,
+                        onPageChanged: (index) {
+                          Provider.of<PageIndicatorProvider>(context,
+                                  listen: false)
+                              .pageIndicator(index);
+                        },
+                        children: [
+                          for (int i = 0; i < 3; i++)
+                            DiscoverCard(
+                              movie: discoverMovies[i],
+                            ),
+                        ],
+                      ),
               ),
               Consumer<PageIndicatorProvider>(
                 builder: (context, provider, child) => Row(
@@ -201,7 +182,7 @@ class _HomeState extends State<Home> {
                             height: 50,
                             alignment: Alignment.center,
                             child: Text(
-                              "Empty",
+                              "Could not fetch data",
                               style: Style.defaultTextStyle,
                             ),
                           );
@@ -241,7 +222,7 @@ class _HomeState extends State<Home> {
                             height: 50,
                             alignment: Alignment.center,
                             child: Text(
-                              "Empty",
+                              "Could not fetch data",
                               style: Style.defaultTextStyle,
                             ),
                           );
