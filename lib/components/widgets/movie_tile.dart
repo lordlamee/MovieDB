@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/components/widgets/build_functions.dart';
 import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/ui/movie_details.dart';
 import 'package:movie_app/utilities/constants.dart';
@@ -91,9 +92,7 @@ class MovieTile extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      "${months[int.parse(movie.releaseDate.substring(5, 7))]}" +
-                          " ${movie.releaseDate.substring(8, 10)}," +
-                          "${movie.releaseDate.substring(0, 4)}",
+                      formatDate(movie?.releaseDate ?? ""),
                       style: Style.defaultTextStyle.copyWith(
                         fontSize: 15,
                         color: Style.textGrey,

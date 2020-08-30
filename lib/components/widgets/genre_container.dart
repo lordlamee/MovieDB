@@ -13,13 +13,11 @@ class GenreContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
           width: 1,
-          color: Style.themeWhite,
         ),
       ),
       child: Text(
         genre ?? "",
-        style: Style.defaultTextStyle.copyWith(
-          color: Style.themeWhite.withOpacity(0.8),
+        style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
         ),

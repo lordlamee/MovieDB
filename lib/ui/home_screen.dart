@@ -9,6 +9,7 @@ import 'package:movie_app/controllers/discover_controller.dart';
 import 'package:movie_app/controllers/trending_controller.dart';
 import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/provider/page_indicator_provider.dart';
+import 'package:movie_app/provider/theme_provide.dart';
 import 'package:movie_app/theme/theme_config.dart';
 import 'package:movie_app/ui/search_delegate.dart';
 import 'package:movie_app/utilities/constants.dart';
@@ -68,8 +69,11 @@ class _HomeState extends State<Home> {
     screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(
-          Icons.menu,
+        leading: IconButton(
+          onPressed: () {
+            Provider.of<ThemeProvider>(context, listen: false).switchTheme();
+          },
+          icon: Icon(Icons.format_paint),
         ),
         actions: [
           buildSearchIcon(context, MoviesSearchDelegate()),
@@ -232,10 +236,10 @@ class PageIndicator extends StatelessWidget {
       height: 3,
       width: 16,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(2),
-          color: selected
-              ? ThemeConfig.themeGrey
-              : Theme.of(context).textTheme.headline6.color,
+        borderRadius: BorderRadius.circular(2),
+        color: selected
+            ? ThemeConfig.themeGrey
+            : Theme.of(context).textTheme.headline6.color,
       ),
     );
   }
@@ -261,7 +265,8 @@ class RowHeading extends StatelessWidget {
             Text(
               "See all",
               style: TextStyle(
-                color: Theme.of(context).textTheme.caption.color.withOpacity(0.8),
+                color:
+                    Theme.of(context).textTheme.caption.color.withOpacity(0.8),
                 fontSize: 15,
               ),
             ),

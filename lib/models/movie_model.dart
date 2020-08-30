@@ -1,4 +1,4 @@
-class Movie {
+class Movie implements Comparable {
   String movieName;
   String rating;
   String imageUrl;
@@ -27,5 +27,18 @@ class Movie {
     rating = jsonData["vote_average"].toString();
     tagLine = jsonData["tagline"].toString();
     genres = jsonData["genres"];
+  }
+
+  @override
+  int compareTo(otherMovieObject) {
+    if (int.parse(this.rating) < int.parse(otherMovieObject.rating)) {
+      return 1;
+    } else if (int.parse(this.rating) == int.parse(otherMovieObject.rating)) {
+      return 0;
+    } else if (int.parse(this.rating) > int.parse(otherMovieObject.rating)) {
+      return -1;
+    } else {
+      return null;
+    }
   }
 }

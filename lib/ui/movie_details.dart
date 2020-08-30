@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/components/widgets/build_functions.dart';
 import 'package:movie_app/components/widgets/genre_container.dart';
 import 'package:movie_app/components/widgets/movie_card.dart';
 import 'package:movie_app/controllers/movie_detail_controller.dart';
 import 'package:movie_app/controllers/recommendations_controller.dart';
 import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/utilities/constants.dart';
-import 'package:movie_app/utilities/styles.dart' as Style;
 
 class MovieDetail extends StatelessWidget {
   final String movieId;
@@ -48,8 +46,7 @@ class MovieDetail extends StatelessWidget {
                         ),
                         child: Text(
                           snapshot.data?.movieName ?? "Movie Name",
-                          style: Style.defaultTextStyle.copyWith(
-                            color: Style.themeWhite,
+                          style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                           ),
@@ -64,8 +61,7 @@ class MovieDetail extends StatelessWidget {
                           "${months[int.parse(snapshot.data.releaseDate.substring(5, 7))]}" +
                               " ${snapshot.data.releaseDate.substring(8, 10)}," +
                               "${snapshot.data.releaseDate.substring(0, 4)}",
-                          style: Style.defaultTextStyle.copyWith(
-                            color: Style.themeWhite,
+                          style: TextStyle(
                             fontSize: 15,
                           ),
                         ),
@@ -87,8 +83,7 @@ class MovieDetail extends StatelessWidget {
                         child: Text(
                           snapshot.data?.tagLine ??
                               "An entire universe ,once and for all",
-                          style: Style.defaultTextStyle.copyWith(
-                            color: Style.themeWhite.withOpacity(0.8),
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
@@ -101,8 +96,7 @@ class MovieDetail extends StatelessWidget {
                         ),
                         child: Text(
                           "Overview",
-                          style: Style.defaultTextStyle.copyWith(
-                            color: Style.defaultWhite,
+                          style: TextStyle(
                             fontSize: 19,
                             fontWeight: FontWeight.bold,
                           ),
@@ -116,8 +110,7 @@ class MovieDetail extends StatelessWidget {
                         ),
                         child: Text(
                           snapshot.data?.overview ?? "Actual Overview",
-                          style: Style.defaultTextStyle.copyWith(
-                            color: Style.themeWhite,
+                          style: TextStyle(
                             fontSize: 15,
                           ),
                         ),
@@ -130,8 +123,7 @@ class MovieDetail extends StatelessWidget {
                         ),
                         child: Text(
                           "Recommendations",
-                          style: Style.defaultTextStyle.copyWith(
-                            color: Style.defaultWhite,
+                          style: TextStyle(
                             fontSize: 19,
                             fontWeight: FontWeight.bold,
                           ),
@@ -171,7 +163,7 @@ class MovieDetail extends StatelessWidget {
                                   alignment: Alignment.center,
                                   child: Text(
                                     snapshot.data["status_message"],
-                                    style: Style.defaultTextStyle,
+                                    style: TextStyle(),
                                   ),
                                 );
                               }

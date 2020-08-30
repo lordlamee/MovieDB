@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_app/utilities/styles.dart' as Style;
+import 'package:intl/intl.dart';
+
+formatDate(String date) {
+  DateTime dateTime = DateTime.parse(date);
+  return DateFormat.yMMMMd().format(dateTime).toString();
+}
 
 buildSearchIcon(BuildContext context, SearchDelegate delegate) {
   return InkWell(
