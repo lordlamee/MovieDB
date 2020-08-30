@@ -8,7 +8,6 @@ class ThemeConfig {
   static Color darkAccent = Color(0xFFFFCE31);
   static Color lightBG = Color(0xfffcfcff);
   static Color darkBG = Color(0xff121212);
-//  static Color greenAccent = Colors.teal;
 
   static Color backgroundBlack = Color(0xFF161616);
   static Color defaultWhite = Color(0xFFFFFFFF);
@@ -55,14 +54,4 @@ class ThemeConfig {
   );
 
   static Color profileCardShadowColor = Colors.grey[200];
-
-//  static BoxShadow cardShadow = BoxShadow(
-//    color: greenAccent.withOpacity(0.1),
-//    blurRadius: 8.0,
-//    spreadRadius: 0.0,
-//    offset: Offset(
-//      0.0,
-//      2.0,
-//    ),
-//  );
 }
