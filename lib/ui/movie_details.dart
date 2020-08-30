@@ -67,6 +67,7 @@ class MovieDetail extends StatelessWidget {
                         ),
                       ),
                       Wrap(
+                        runSpacing: 8,
                         children: [
                           for (dynamic genre in snapshot.data.genres)
                             GenreContainer(
@@ -139,9 +140,16 @@ class MovieDetail extends StatelessWidget {
                                 ConnectionState.done) {
                               if (!snapshot.hasError) {
                                 if (snapshot.hasData) {
-                                  return ListView.builder(
+                                  return ListView.separated(
+                                      padding: EdgeInsets.only(
+                                        left: 16,
+                                        right: 16,
+                                      ),
+                                      separatorBuilder: (context, index) =>
+                                          SizedBox(
+                                            width: 16,
+                                          ),
                                       scrollDirection: Axis.horizontal,
-                                      padding: EdgeInsets.zero,
                                       itemCount: snapshot.data["items"].length,
                                       itemBuilder: (context, index) {
                                         return MovieCard(

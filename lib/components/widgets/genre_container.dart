@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/utilities/styles.dart' as Style;
 
 class GenreContainer extends StatelessWidget {
   GenreContainer({this.genre});
@@ -12,6 +11,7 @@ class GenreContainer extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
+          color: Theme.of(context).textTheme.bodyText1.color,
           width: 1,
         ),
       ),

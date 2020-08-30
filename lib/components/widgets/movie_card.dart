@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/components/widgets/build_functions.dart';
 import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/ui/movie_details.dart';
 import 'package:movie_app/utilities/constants.dart';
@@ -28,7 +29,6 @@ class _MovieCardState extends State<MovieCard> {
       },
       child: Container(
         width: 118,
-        margin: EdgeInsets.only(left: 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -56,9 +56,13 @@ class _MovieCardState extends State<MovieCard> {
             Row(
               children: [
                 Text(
-                  "${widget.movie?.releaseDate?.substring(0, 4) ?? ""}",
+                  "${formatDateToYear(widget.movie.releaseDate) ?? ""}",
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.caption.color.withOpacity(0.8),
+                    color: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .color
+                        .withOpacity(0.8),
                     fontSize: 12,
                   ),
                 ),

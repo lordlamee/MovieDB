@@ -23,15 +23,21 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   PageController _discoverController = PageController();
   List<Movie> discoverMovies = [];
-  bool loadingDiscover = true;
+  List<Movie> trendingMoviesDaily = [];
+  List<Movie> trendingMoviesWeekly = [];
+  bool loading = true;
   @override
   void initState() {
     super.initState();
     Future(() async {
       final discover = await DiscoverController().handleDiscoverItems();
       discoverMovies = discover["items"];
+      final trendingDaily = await TrendingController().trendingMoviesDaily();
+      trendingMoviesDaily = trendingDaily["items"];
+      final trendingWeekly = await TrendingController().trendingMoviesWeekly();
+      trendingMoviesWeekly = trendingWeekly["items"];
       setState(() {
-        loadingDiscover = false;
+        loading = false;
       });
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -47,12 +53,13 @@ class _HomeState extends State<Home> {
                 .setIndex(0);
           }
           assert(discoverMovies.isNotEmpty);
-          _discoverController.animateToPage(
-            Provider.of<PageIndicatorProvider>(context, listen: false)
-                .selectedDiscoverPage,
-            duration: Duration(milliseconds: 500),
-            curve: Curves.decelerate,
-          );
+          if (trendingMoviesWeekly.isNotEmpty)
+            _discoverController.animateToPage(
+              Provider.of<PageIndicatorProvider>(context, listen: false)
+                  .selectedDiscoverPage,
+              duration: Duration(milliseconds: 500),
+              curve: Curves.decelerate,
+            );
         }
       });
     });
@@ -82,27 +89,25 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Text(
-                  "Discover",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  ),
-                ),
-              ),
-              Container(
-                height: 250,
-                child: loadingDiscover
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : PageView(
+      body: loading
+          ? CircularProgressIndicator()
+          : SingleChildScrollView(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      child: Text(
+                        "Discover",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 250,
+                      child: PageView(
                         controller: _discoverController,
                         onPageChanged: (index) {
                           Provider.of<PageIndicatorProvider>(context,
@@ -116,109 +121,103 @@ class _HomeState extends State<Home> {
                             ),
                         ],
                       ),
-              ),
-              Consumer<PageIndicatorProvider>(
-                builder: (context, provider, child) => Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    PageIndicator(
-                      selected: provider.selectedDiscoverPage == 0,
                     ),
-                    PageIndicator(
-                      selected: provider.selectedDiscoverPage == 1,
+                    Consumer<PageIndicatorProvider>(
+                      builder: (context, provider, child) => Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          PageIndicator(
+                            selected: provider.selectedDiscoverPage == 0,
+                          ),
+                          PageIndicator(
+                            selected: provider.selectedDiscoverPage == 1,
+                          ),
+                          PageIndicator(
+                            selected: provider.selectedDiscoverPage == 2,
+                          ),
+                        ],
+                      ),
                     ),
-                    PageIndicator(
-                      selected: provider.selectedDiscoverPage == 2,
+                    SizedBox(
+                      height: 24,
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 24,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16, bottom: 16),
-                child: Text(
-                  "Trending",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  ),
-                ),
-              ),
-              RowHeading(
-                title: "Today",
-              ),
-              Container(
-                height: 220,
-                child: FutureBuilder(
-                    future: TrendingController().trendingMoviesDaily(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        if (snapshot.hasData) {
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            padding: EdgeInsets.zero,
-                            itemBuilder: (context, index) => MovieCard(
-                              movie: snapshot.data["items"][index],
-                            ),
-                            itemCount: snapshot.data["items"].length,
-                          );
-                        } else {
-                          return Container(
-                            height: 50,
-                            alignment: Alignment.center,
-                            child: Text(
-                              "Could not fetch data",
-                            ),
-                          );
-                        }
-                      } else {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    }),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              RowHeading(
-                title: "This week",
-              ),
-              Container(
-                height: 250,
-                child: FutureBuilder(
-                    future: TrendingController().trendingMoviesWeekly(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        if (snapshot.hasData) {
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            padding: EdgeInsets.zero,
-                            itemBuilder: (context, index) => MovieCard(
-                              movie: snapshot.data["items"][index],
-                            ),
-                            itemCount: snapshot.data["items"].length,
-                          );
-                        } else {
-                          return Container(
-                            height: 50,
-                            alignment: Alignment.center,
-                            child: Text(
-                              "Could not fetch data",
-                            ),
-                          );
-                        }
-                      } else {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    }),
-              ),
-            ]),
-      ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16, bottom: 16),
+                      child: Text(
+                        "Trending",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                        ),
+                      ),
+                    ),
+                    RowHeading(
+                      title: "Today",
+                    ),
+                    Container(
+                      height: 220,
+                      child: ListView.separated(
+                        padding: EdgeInsets.only(
+                          left: 16,
+                          right: 16,
+                        ),
+                        separatorBuilder: (context, index) => SizedBox(
+                          width: 16,
+                        ),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: trendingMoviesDaily.length,
+                        itemBuilder: (context, index) {
+                          if (trendingMoviesDaily.isNotEmpty) {
+                            return MovieCard(
+                              movie: trendingMoviesDaily[index],
+                            );
+                          } else {
+                            return Center(
+                              child: Text(
+                                "No data found",
+                                style: TextStyle(),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    RowHeading(
+                      title: "This week",
+                    ),
+                    Container(
+                      height: 250,
+                      child: ListView.separated(
+                        padding: EdgeInsets.only(
+                          left: 16,
+                          right: 16,
+                        ),
+                        separatorBuilder: (context, index) => SizedBox(
+                          width: 16,
+                        ),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: trendingMoviesWeekly.length,
+                        itemBuilder: (context, index) {
+                          if (trendingMoviesDaily.isNotEmpty) {
+                            return MovieCard(
+                              movie: trendingMoviesDaily[index],
+                            );
+                          } else {
+                            return Center(
+                              child: Text(
+                                "No data found",
+                                style: TextStyle(),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ]),
+            ),
     );
   }
 }
