@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_app/controllers/movie_detail_controller.dart';
 import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/ui/movie_details.dart';
 import 'package:movie_app/utilities/constants.dart';
-import 'package:movie_app/utilities/indicator/indicators.dart';
 import 'package:movie_app/utilities/styles.dart' as Style;
 
 class DiscoverCard extends StatelessWidget {
@@ -18,15 +16,11 @@ class DiscoverCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        Indicator.loading(context);
-        Movie movieDetail =
-            await MovieDetailController().getMovieDetails(movie.movieId);
-        Indicator.popIndicator(context);
         Navigator.push(
           context,
           CupertinoPageRoute(
             builder: (context) => MovieDetail(
-              movie: movieDetail,
+              movieId: movie.movieId,
             ),
           ),
         );

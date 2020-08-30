@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_app/controllers/movie_detail_controller.dart';
 import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/ui/movie_details.dart';
 import 'package:movie_app/utilities/constants.dart';
-import 'package:movie_app/utilities/indicator/indicators.dart';
 import 'package:movie_app/utilities/styles.dart' as Style;
 
 class MovieTile extends StatelessWidget {
@@ -16,39 +14,35 @@ class MovieTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.only(
         bottom: 16,
       ),
       child: InkWell(
         onTap: () async {
-          Indicator.loading(context);
-          Movie movieDetail =
-              await MovieDetailController().getMovieDetails(movie.movieId);
-          Indicator.popIndicator(context);
           Navigator.push(
             context,
             CupertinoPageRoute(
               builder: (context) => MovieDetail(
-                movie: movieDetail,
+                movieId: movie.movieId,
               ),
             ),
           );
         },
         child: Row(
           children: [
-            Container(
-              height: 150,
-              width: 110,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(4),
-                  bottomLeft: Radius.circular(4),
-                ),
-                image: DecorationImage(
-                  image: NetworkImage("$movieBaseUrl${movie.imageUrl}"),
-                  fit: BoxFit.fill,
-                ),
+            ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                bottomLeft: Radius.circular(10),
+              ),
+              child: FadeInImage.assetNetwork(
+                width: 110,
+                height: 150,
+                placeholder: "assets/placeholder.png",
+                image: "$movieBaseUrl${movie.imageUrl}",
+                fit: BoxFit.fill,
               ),
             ),
             Expanded(
@@ -56,6 +50,10 @@ class MovieTile extends StatelessWidget {
                 height: 150,
                 decoration: BoxDecoration(
                   color: Style.defaultWhite,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                  ),
                 ),
                 padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
                 child: Column(

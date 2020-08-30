@@ -37,6 +37,11 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Style.backgroundBlack,
@@ -44,13 +49,6 @@ class _SearchScreenState extends State<SearchScreen> {
         padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
         child: Column(
           children: [
-//            Row(
-//              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//              children: [
-//                ShowTypeButton(),
-//                ShowTypeButton(),
-//              ],
-//            ),
             TextFormField(
               onChanged: (query) async {
                 setState(() {
@@ -103,32 +101,6 @@ class _SearchScreenState extends State<SearchScreen> {
 //              child: Container(),
 //            ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class ShowTypeButton extends StatelessWidget {
-  const ShowTypeButton({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return FlatButton(
-      padding: EdgeInsets.symmetric(horizontal: 32),
-      color: Style.themeWhite,
-      onPressed: () {},
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Text(
-        "Movies",
-        style: Style.defaultTextStyle.copyWith(
-          color: Style.backgroundBlack,
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
         ),
       ),
     );

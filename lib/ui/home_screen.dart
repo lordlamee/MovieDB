@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/components/widgets/build_functions.dart';
 import 'package:movie_app/components/widgets/discover_card.dart';
 import 'package:movie_app/components/widgets/movie_card.dart';
 import 'package:movie_app/controllers/discover_controller.dart';
 import 'package:movie_app/controllers/trending_controller.dart';
 import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/provider/page_indicator_provider.dart';
-import 'package:movie_app/ui/search_screen.dart';
+import 'package:movie_app/ui/search_delegate.dart';
 import 'package:movie_app/utilities/constants.dart';
 import 'package:movie_app/utilities/styles.dart' as Style;
 import 'package:provider/provider.dart';
@@ -67,36 +68,23 @@ class _HomeState extends State<Home> {
     screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Style.backgroundBlack,
+      appBar: AppBar(
+        backgroundColor: Style.backgroundBlack,
+        leading: Icon(
+          Icons.menu,
+          color: Style.defaultWhite,
+        ),
+        actions: [
+          buildSearchIcon(context, MoviesSearchDelegate()),
+          SizedBox(
+            width: 16,
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 40, 16, 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Icon(
-                      Icons.menu,
-                      color: Style.defaultWhite,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => SearchScreen(),
-                          ),
-                        );
-                      },
-                      child: Icon(
-                        Icons.search,
-                        color: Style.defaultWhite,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 child: Text(
@@ -167,15 +155,13 @@ class _HomeState extends State<Home> {
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
                         if (snapshot.hasData) {
-                          return ListView(
+                          return ListView.builder(
                             scrollDirection: Axis.horizontal,
                             padding: EdgeInsets.zero,
-                            children: [
-                              for (int i = 0; i < 10; i++)
-                                MovieCard(
-                                  movie: snapshot.data["items"][i],
-                                ),
-                            ],
+                            itemBuilder: (context, index) => MovieCard(
+                              movie: snapshot.data["items"][index],
+                            ),
+                            itemCount: snapshot.data["items"].length,
                           );
                         } else {
                           return Container(
@@ -207,15 +193,13 @@ class _HomeState extends State<Home> {
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
                         if (snapshot.hasData) {
-                          return ListView(
+                          return ListView.builder(
                             scrollDirection: Axis.horizontal,
                             padding: EdgeInsets.zero,
-                            children: [
-                              for (int i = 0; i < 10; i++)
-                                MovieCard(
-                                  movie: snapshot.data["items"][i],
-                                ),
-                            ],
+                            itemBuilder: (context, index) => MovieCard(
+                              movie: snapshot.data["items"][index],
+                            ),
+                            itemCount: snapshot.data["items"].length,
                           );
                         } else {
                           return Container(

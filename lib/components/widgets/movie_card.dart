@@ -1,28 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_app/controllers/movie_detail_controller.dart';
 import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/ui/movie_details.dart';
 import 'package:movie_app/utilities/constants.dart';
-import 'package:movie_app/utilities/indicator/indicators.dart';
 import 'package:movie_app/utilities/styles.dart' as Style;
 
-class MovieCard extends StatelessWidget {
+class MovieCard extends StatefulWidget {
   const MovieCard({Key key, this.movie}) : super(key: key);
   final Movie movie;
+
+  @override
+  _MovieCardState createState() => _MovieCardState();
+}
+
+class _MovieCardState extends State<MovieCard> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        Indicator.loading(context);
-        Movie movieDetail =
-            await MovieDetailController().getMovieDetails(movie.movieId);
-        Indicator.popIndicator(context);
         Navigator.push(
           context,
           CupertinoPageRoute(
             builder: (context) => MovieDetail(
-              movie: movieDetail,
+              movieId: widget.movie.movieId,
             ),
           ),
         );
@@ -33,32 +33,32 @@ class MovieCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(
-              height: 150,
-              width: 118,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage("$movieBaseUrl${movie.imageUrl}"),
-                  fit: BoxFit.fill,
-                ),
-                color: Style.themeWhite,
-                borderRadius: BorderRadius.circular(10),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: FadeInImage.assetNetwork(
+                width: 118,
+                height: 150,
+                placeholder: "assets/placeholder.png",
+                image: "$movieBaseUrl${widget.movie.imageUrl}",
+                fit: BoxFit.fill,
               ),
             ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "${movie?.movieName ?? "movie name"}",
-                style: Style.defaultTextStyle.copyWith(
-                  fontSize: 14,
-                  color: Style.themeWhite,
+            Flexible(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "${widget.movie?.movieName ?? "movie name"}",
+                  style: Style.defaultTextStyle.copyWith(
+                    fontSize: 14,
+                    color: Style.themeWhite,
+                  ),
                 ),
               ),
             ),
             Row(
               children: [
                 Text(
-                  "${movie?.releaseDate?.substring(0, 4) ?? ""}",
+                  "${widget.movie?.releaseDate?.substring(0, 4) ?? ""}",
                   style: Style.defaultTextStyle.copyWith(
                     color: Style.themeWhite.withOpacity(0.8),
                     fontSize: 12,
@@ -66,7 +66,7 @@ class MovieCard extends StatelessWidget {
                 ),
                 Spacer(),
                 Text(
-                  "${movie?.rating ?? ""}",
+                  "${widget.movie?.rating ?? ""}",
                   style: Style.defaultTextStyle.copyWith(
                     color: Style.themeWhite,
                     fontSize: 12,
