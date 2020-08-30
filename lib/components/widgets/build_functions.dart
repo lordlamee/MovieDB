@@ -9,7 +9,6 @@ buildSearchIcon(BuildContext context, SearchDelegate delegate) {
     },
     child: Icon(
       Icons.search,
-      color: Style.defaultWhite,
     ),
   );
 }

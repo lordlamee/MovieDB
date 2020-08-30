@@ -9,9 +9,9 @@ import 'package:movie_app/controllers/discover_controller.dart';
 import 'package:movie_app/controllers/trending_controller.dart';
 import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/provider/page_indicator_provider.dart';
+import 'package:movie_app/theme/theme_config.dart';
 import 'package:movie_app/ui/search_delegate.dart';
 import 'package:movie_app/utilities/constants.dart';
-import 'package:movie_app/utilities/styles.dart' as Style;
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -67,12 +67,9 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Style.backgroundBlack,
       appBar: AppBar(
-        backgroundColor: Style.backgroundBlack,
         leading: Icon(
           Icons.menu,
-          color: Style.defaultWhite,
         ),
         actions: [
           buildSearchIcon(context, MoviesSearchDelegate()),
@@ -89,7 +86,7 @@ class _HomeState extends State<Home> {
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 child: Text(
                   "Discover",
-                  style: Style.defaultTextStyle.copyWith(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
                   ),
@@ -139,7 +136,7 @@ class _HomeState extends State<Home> {
                 padding: const EdgeInsets.only(left: 16, bottom: 16),
                 child: Text(
                   "Trending",
-                  style: Style.defaultTextStyle.copyWith(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
                   ),
@@ -169,7 +166,6 @@ class _HomeState extends State<Home> {
                             alignment: Alignment.center,
                             child: Text(
                               "Could not fetch data",
-                              style: Style.defaultTextStyle,
                             ),
                           );
                         }
@@ -207,7 +203,6 @@ class _HomeState extends State<Home> {
                             alignment: Alignment.center,
                             child: Text(
                               "Could not fetch data",
-                              style: Style.defaultTextStyle,
                             ),
                           );
                         }
@@ -238,7 +233,10 @@ class PageIndicator extends StatelessWidget {
       width: 16,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2),
-          color: selected ? Style.themeGrey : Style.defaultWhite),
+          color: selected
+              ? ThemeConfig.themeGrey
+              : Theme.of(context).textTheme.headline6.color,
+      ),
     );
   }
 }
@@ -255,15 +253,15 @@ class RowHeading extends StatelessWidget {
           children: <Widget>[
             Text(
               title,
-              style: Style.defaultTextStyle.copyWith(
+              style: TextStyle(
                 fontWeight: FontWeight.normal,
                 fontSize: 20,
               ),
             ),
             Text(
               "See all",
-              style: Style.defaultTextStyle.copyWith(
-                color: Style.defaultWhite.withOpacity(0.8),
+              style: TextStyle(
+                color: Theme.of(context).textTheme.caption.color.withOpacity(0.8),
                 fontSize: 15,
               ),
             ),

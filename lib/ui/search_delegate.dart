@@ -7,17 +7,21 @@ import 'package:movie_app/utilities/styles.dart' as Style;
 class MoviesSearchDelegate extends SearchDelegate {
   @override
   ThemeData appBarTheme(BuildContext context) {
-    return ThemeData.dark();
+    assert(context != null);
+    final ThemeData theme = Theme.of(context);
+    assert(theme != null);
+    return theme;
   }
 
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
-      InkWell(
-          onTap: () {
-            query = "";
-          },
-          child: Icon(Icons.clear)),
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
     ];
   }
 

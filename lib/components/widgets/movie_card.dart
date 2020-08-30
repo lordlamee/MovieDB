@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/ui/movie_details.dart';
 import 'package:movie_app/utilities/constants.dart';
-import 'package:movie_app/utilities/styles.dart' as Style;
 
 class MovieCard extends StatefulWidget {
   const MovieCard({Key key, this.movie}) : super(key: key);
@@ -48,9 +47,8 @@ class _MovieCardState extends State<MovieCard> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "${widget.movie?.movieName ?? "movie name"}",
-                  style: Style.defaultTextStyle.copyWith(
+                  style: TextStyle(
                     fontSize: 14,
-                    color: Style.themeWhite,
                   ),
                 ),
               ),
@@ -59,22 +57,21 @@ class _MovieCardState extends State<MovieCard> {
               children: [
                 Text(
                   "${widget.movie?.releaseDate?.substring(0, 4) ?? ""}",
-                  style: Style.defaultTextStyle.copyWith(
-                    color: Style.themeWhite.withOpacity(0.8),
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.caption.color.withOpacity(0.8),
                     fontSize: 12,
                   ),
                 ),
                 Spacer(),
                 Text(
                   "${widget.movie?.rating ?? ""}",
-                  style: Style.defaultTextStyle.copyWith(
-                    color: Style.themeWhite,
+                  style: TextStyle(
                     fontSize: 12,
                   ),
                 ),
                 Icon(
                   Icons.star,
-                  color: Style.appYellow,
+                  color: Theme.of(context).accentColor,
                 ),
               ],
             ),

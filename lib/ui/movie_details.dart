@@ -16,7 +16,6 @@ class MovieDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Style.backgroundBlack,
       body: FutureBuilder<Movie>(
           future: MovieDetailController().getMovieDetails(movieId),
           builder: (context, snapshot) {
@@ -26,7 +25,6 @@ class MovieDetail extends StatelessWidget {
                     (BuildContext context, bool innerBoxIsScrolled) {
                   return [
                     SliverAppBar(
-                      backgroundColor: Style.backgroundBlack,
                       expandedHeight: screenSize.height * 0.6,
                       floating: false,
                       pinned: true,
