@@ -1,21 +1,45 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/components/widgets/genre_container.dart';
 import 'package:movie_app/components/widgets/movie_card.dart';
+import 'package:movie_app/components/widgets/video_card.dart';
 import 'package:movie_app/controllers/movie_detail_controller.dart';
 import 'package:movie_app/controllers/recommendations_controller.dart';
+import 'package:movie_app/controllers/video/video_controller.dart';
 import 'package:movie_app/models/movie_model.dart';
+import 'package:movie_app/models/video_model.dart';
+import 'package:movie_app/ui/media_screen.dart';
 import 'package:movie_app/utilities/constants.dart';
+import 'package:movie_app/components/widgets/build_functions.dart';
 
-class MovieDetail extends StatelessWidget {
+class MovieDetail extends StatefulWidget {
   final String movieId;
   MovieDetail({this.movieId});
+
+  @override
+  _MovieDetailState createState() => _MovieDetailState();
+}
+
+class _MovieDetailState extends State<MovieDetail> {
+  Future movieDetails;
+  Future recommendedMovies;
+  Future media;
+  List<Video> videos = [];
+  @override
+  void initState() {
+    movieDetails = MovieDetailController().getMovieDetails(widget.movieId);
+    recommendedMovies =
+        RecommendationController().getRecommendations(widget.movieId);
+    media = VideoController().videos(widget.movieId);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
     return Scaffold(
       body: FutureBuilder<Movie>(
-          future: MovieDetailController().getMovieDetails(movieId),
+          future: movieDetails,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return NestedScrollView(
@@ -82,8 +106,7 @@ class MovieDetail extends StatelessWidget {
                           top: 8,
                         ),
                         child: Text(
-                          snapshot.data?.tagLine ??
-                              "An entire universe ,once and for all",
+                          snapshot.data?.tagLine ?? "",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -106,7 +129,7 @@ class MovieDetail extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(
                           left: 16,
-                          bottom: 8,
+                          bottom: 16,
                           right: 16,
                         ),
                         child: Text(
@@ -116,9 +139,78 @@ class MovieDetail extends StatelessWidget {
                           ),
                         ),
                       ),
+                      rowHeading(
+                        "Videos and trailers",
+                        context,
+                        true,
+                        () {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>
+                                      MediaScreen(videos: videos)));
+                        },
+                      ),
+                      Container(
+                        height: 110,
+                        child: FutureBuilder(
+                            future: media,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                if (!snapshot.hasError) {
+                                  if (snapshot.hasData) {
+                                    videos = snapshot.data["items"];
+                                    return ListView.separated(
+                                        padding: EdgeInsets.only(
+                                          left: 16,
+                                          right: 16,
+                                        ),
+                                        separatorBuilder: (context, index) =>
+                                            SizedBox(
+                                              width: 16,
+                                            ),
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount:
+                                            snapshot.data["items"].length > 3
+                                                ? 3
+                                                : snapshot.data["items"].length,
+                                        itemBuilder: (context, index) {
+                                          return VideoCard(
+                                            video: snapshot.data["items"]
+                                                [index],
+                                          );
+                                        });
+                                  } else {
+                                    return Container(
+                                      child: Center(
+                                        child: Text(
+                                          "No Media",
+                                          style: TextStyle(),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                } else {
+                                  return Container(
+                                    height: 50,
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      snapshot.data["status_message"],
+                                      style: TextStyle(),
+                                    ),
+                                  );
+                                }
+                              } else {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                            }),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(
-                          top: 16,
+                          top: 24,
                           left: 16,
                           bottom: 8,
                         ),
@@ -133,8 +225,7 @@ class MovieDetail extends StatelessWidget {
                       Container(
                         height: 250,
                         child: FutureBuilder(
-                          future: RecommendationController()
-                              .getRecommendations(snapshot.data.movieId),
+                          future: recommendedMovies,
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.done) {
@@ -160,7 +251,8 @@ class MovieDetail extends StatelessWidget {
                                   return Container(
                                     child: Center(
                                       child: Text(
-                                        snapshot.error.toString(),
+                                        "No recommendation",
+                                        style: TextStyle(),
                                       ),
                                     ),
                                   );

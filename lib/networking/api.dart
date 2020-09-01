@@ -117,4 +117,23 @@ class Api {
     }
     return recommendations;
   }
+
+  getVideos(String movieId) async {
+    String getUrl = "$baseUrl/movie/$movieId/videos?api_key=$apiKey";
+    http.Response videoResponse = await http.get(getUrl);
+    var jsonData = jsonDecode(videoResponse.body);
+    var videos;
+    if (videoResponse.statusCode == 200) {
+      videos = {
+        "status": "success",
+        "results": jsonData["results"],
+      };
+    } else {
+      videos = {
+        "status": "fail",
+        "results": jsonData["status_message"],
+      };
+    }
+    return videos;
+  }
 }

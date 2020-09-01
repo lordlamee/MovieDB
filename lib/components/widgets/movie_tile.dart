@@ -50,7 +50,7 @@ class MovieTile extends StatelessWidget {
               child: Container(
                 height: 150,
                 decoration: BoxDecoration(
-                  color: Style.defaultWhite,
+                  color: Theme.of(context).textTheme.bodyText1.color,
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(10),
                     bottomRight: Radius.circular(10),
@@ -69,7 +69,7 @@ class MovieTile extends StatelessWidget {
                             style: Style.defaultTextStyle.copyWith(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
-                              color: Style.backgroundBlack,
+                              color: Theme.of(context).primaryColor,
                             ),
                           ),
                         ),
@@ -78,7 +78,7 @@ class MovieTile extends StatelessWidget {
                             Text(
                               "${movie?.rating ?? ""}",
                               style: Style.defaultTextStyle.copyWith(
-                                color: Style.backgroundBlack,
+                                color: Theme.of(context).primaryColor,
                                 fontSize: 14,
                               ),
                             ),
@@ -95,7 +95,7 @@ class MovieTile extends StatelessWidget {
                       formatDate(movie?.releaseDate ?? ""),
                       style: Style.defaultTextStyle.copyWith(
                         fontSize: 15,
-                        color: Style.textGrey,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     Flexible(
@@ -105,7 +105,8 @@ class MovieTile extends StatelessWidget {
                             : movie.overview,
                         style: Style.defaultTextStyle.copyWith(
                           fontSize: 18,
-                          color: Style.backgroundBlack.withOpacity(0.9),
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.9),
                         ),
                       ),
                     ),
