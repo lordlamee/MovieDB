@@ -6,15 +6,14 @@ import 'package:movie_app/utilities/styles.dart';
 import 'build_functions.dart';
 
 class VideoCard extends StatelessWidget {
-  const VideoCard(
-      {this.video,
-      this.height = 110,
-      this.width = 115,
-      this.borderRadius = 10});
+  const VideoCard({
+    this.video,
+    this.height = 110,
+    this.width = 115,
+  });
   final Video video;
   final double height;
   final double width;
-  final double borderRadius;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,15 +21,12 @@ class VideoCard extends StatelessWidget {
       height: height,
       child: Stack(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(borderRadius),
-            child: FadeInImage.assetNetwork(
-              width: width,
-              height: height,
-              placeholder: "assets/placeholder.png",
-              image: getMovieUrl(video?.key),
-              fit: BoxFit.cover,
-            ),
+          FadeInImage.assetNetwork(
+            width: width,
+            height: height,
+            placeholder: "assets/placeholder.png",
+            image: getMovieUrl(video?.key),
+            fit: BoxFit.cover,
           ),
           Container(
             decoration: BoxDecoration(

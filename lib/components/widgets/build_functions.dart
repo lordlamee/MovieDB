@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:movie_app/models/video_model.dart';
 
 getMovieUrl(String key) {
-  return "https://img.youtube.com/vi/${key ?? "IpSK2CsKULg"}/maxresdefault.jpg";
+  return "https://img.youtube.com/vi/${key.replaceAll("_", "_") ?? ""}/0.jpg";
 }
 
 formatDate(String date) {
@@ -65,7 +66,8 @@ class RowHeading extends StatelessWidget {
   }
 }
 
-rowHeading(String title, BuildContext context, bool bold, Function onPressed) {
+rowHeading(String title, BuildContext context, bool bold, Function onPressed,
+    List<Video> video) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
     child: Row(
@@ -78,17 +80,21 @@ rowHeading(String title, BuildContext context, bool bold, Function onPressed) {
               fontSize: 20,
             ),
           ),
-          InkWell(
-            onTap: onPressed,
-            child: Text(
-              "See all",
-              style: TextStyle(
-                color:
-                    Theme.of(context).textTheme.caption.color.withOpacity(0.8),
-                fontSize: 15,
+          if (video.isNotEmpty)
+            InkWell(
+              onTap: onPressed,
+              child: Text(
+                "See all",
+                style: TextStyle(
+                  color: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .color
+                      .withOpacity(0.8),
+                  fontSize: 15,
+                ),
               ),
             ),
-          ),
         ]),
   );
 }

@@ -201,9 +201,9 @@ class _HomeState extends State<Home> {
                         scrollDirection: Axis.horizontal,
                         itemCount: trendingMoviesWeekly.length,
                         itemBuilder: (context, index) {
-                          if (trendingMoviesDaily.isNotEmpty) {
+                          if (trendingMoviesWeekly.isNotEmpty) {
                             return MovieCard(
-                              movie: trendingMoviesDaily[index],
+                              movie: trendingMoviesWeekly[index],
                             );
                           } else {
                             return Center(

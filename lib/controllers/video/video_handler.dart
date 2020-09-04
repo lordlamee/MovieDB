@@ -1,15 +1,52 @@
+import 'dart:io';
+import 'package:movie_app/models/video_model.dart' as VideoModel;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-import 'package:youtube_extractor/youtube_extractor.dart';
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class VideoHandler {
   YoutubeExplode youtubeExplode = YoutubeExplode();
-  YouTubeExtractor youTubeExtractor = YouTubeExtractor();
   getMetaData(String videoId) async {
     var video = await youtubeExplode.videos.get(videoId);
+    if (video != null) {
+      return video;
+    } else {
+      return "null";
+    }
   }
 
-  getStream(String videoId) async {
-    var streamInfo = await youTubeExtractor.getMediaStreamsAsync(videoId);
-    print(streamInfo.muxed.first.size);
+  getStreamInfo(String videoId) async {
+    var streamData =
+        await youtubeExplode.videos.streamsClient.getManifest(videoId);
+    if (streamData != null) {
+      var streamInfo = streamData.muxed.first;
+      print(streamInfo);
+      return streamInfo;
+    } else {
+      return "null";
+    }
+  }
+
+  getFilePath(fileName) async {
+    Directory directory = await getExternalStorageDirectory();
+    return "${directory.path}/Downloads/$fileName.mp4";
+  }
+
+  downloadVideo(
+      VideoModel.Video video, Function(int, int) onReceiveProgress) async {
+    Dio dio = Dio();
+    var status = await Permission.storage.status;
+    if (status.isDenied || status.isUndetermined) {
+      await Permission.storage.request();
+    }
+    var streamLink = await getStreamInfo(video.key);
+    print(streamLink.url);
+    var filePath = await getFilePath(video.name);
+    await dio.download(
+      streamLink.url.toString(),
+      filePath,
+      onReceiveProgress: onReceiveProgress,
+    );
   }
 }

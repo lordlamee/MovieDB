@@ -12,6 +12,15 @@ class MediaScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(movie?.movieName ?? "Movie Videos"),
+        actions: [
+          FlatButton(
+            onPressed: () {},
+            child: Text(
+              "Downloads",
+              style: TextStyle(),
+            ),
+          ),
+        ],
       ),
       body: ListView.separated(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),

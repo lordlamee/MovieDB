@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/components/widgets/genre_container.dart';
 import 'package:movie_app/components/widgets/movie_card.dart';
-import 'package:movie_app/components/widgets/video_card.dart';
 import 'package:movie_app/controllers/movie_detail_controller.dart';
 import 'package:movie_app/controllers/recommendations_controller.dart';
 import 'package:movie_app/controllers/video/video_controller.dart';
@@ -10,7 +9,6 @@ import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/models/video_model.dart';
 import 'package:movie_app/ui/media_screen.dart';
 import 'package:movie_app/utilities/constants.dart';
-import 'package:movie_app/components/widgets/build_functions.dart';
 
 class MovieDetail extends StatefulWidget {
   final String movieId;
@@ -23,14 +21,20 @@ class MovieDetail extends StatefulWidget {
 class _MovieDetailState extends State<MovieDetail> {
   Future movieDetails;
   Future recommendedMovies;
-  Future media;
   List<Video> videos = [];
+  getTrailers() async {
+    var videoResponse = await VideoController().videos(widget.movieId);
+    setState(() {
+      videos = videoResponse["items"];
+    });
+  }
+
   @override
   void initState() {
     movieDetails = MovieDetailController().getMovieDetails(widget.movieId);
     recommendedMovies =
         RecommendationController().getRecommendations(widget.movieId);
-    media = VideoController().videos(widget.movieId);
+    getTrailers();
     super.initState();
   }
 
@@ -139,74 +143,29 @@ class _MovieDetailState extends State<MovieDetail> {
                           ),
                         ),
                       ),
-                      rowHeading(
-                        "Videos and trailers",
-                        context,
-                        true,
-                        () {
-                          Navigator.push(
+                      Visibility(
+                        visible: videos.isNotEmpty,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
                               context,
                               CupertinoPageRoute(
-                                  builder: (context) =>
-                                      MediaScreen(videos: videos)));
-                        },
-                      ),
-                      Container(
-                        height: 110,
-                        child: FutureBuilder(
-                            future: media,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                if (!snapshot.hasError) {
-                                  if (snapshot.hasData) {
-                                    videos = snapshot.data["items"];
-                                    return ListView.separated(
-                                        padding: EdgeInsets.only(
-                                          left: 16,
-                                          right: 16,
-                                        ),
-                                        separatorBuilder: (context, index) =>
-                                            SizedBox(
-                                              width: 16,
-                                            ),
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount:
-                                            snapshot.data["items"].length > 3
-                                                ? 3
-                                                : snapshot.data["items"].length,
-                                        itemBuilder: (context, index) {
-                                          return VideoCard(
-                                            video: snapshot.data["items"]
-                                                [index],
-                                          );
-                                        });
-                                  } else {
-                                    return Container(
-                                      child: Center(
-                                        child: Text(
-                                          "No Media",
-                                          style: TextStyle(),
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                } else {
-                                  return Container(
-                                    height: 50,
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      snapshot.data["status_message"],
-                                      style: TextStyle(),
-                                    ),
-                                  );
-                                }
-                              } else {
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                            }),
+                                builder: (context) =>
+                                    MediaScreen(videos: videos),
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 16),
+                            child: Text(
+                              "Videos and trailers",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(

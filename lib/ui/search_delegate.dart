@@ -36,43 +36,10 @@ class MoviesSearchDelegate extends SearchDelegate {
   }
 
   @override
+  // ignore: missing_return
   Widget buildResults(BuildContext context) {
     if (query != "" && query != null) {
-      return FutureBuilder(
-        future: SearchController().handleSearch(query, SearchType.movie),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              if (snapshot.data["status"] == "success") {
-                return ListView.builder(
-                  itemBuilder: (context, index) {
-                    return MovieTile(
-                      movie: snapshot.data["results"][index],
-                    );
-                  },
-                  itemCount: snapshot.data["results"].length,
-                );
-              } else {
-                return Center(
-                  child: Text(
-                    "",
-                    style: Style.defaultTextStyle,
-                  ),
-                );
-              }
-            } else {
-              return Center(
-                child: Text(
-                  'No Movies Found',
-                  style: Style.defaultTextStyle,
-                ),
-              );
-            }
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        },
-      );
+      return getSearchResults(query);
     } else {
       return Center(
         child: Text(
@@ -88,50 +55,52 @@ class MoviesSearchDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     if (query != "" && query != null) {
-      return FutureBuilder(
-        future: SearchController().handleSearch(query, SearchType.movie),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              if (snapshot.data["status"] == "success") {
-                return ListView.builder(
-                  itemBuilder: (context, index) {
-                    return MovieTile(
-                      movie: snapshot.data["results"][index],
-                    );
-                  },
-                  itemCount: snapshot.data["results"].length,
-                );
-              } else {
-                return Center(
-                  child: Text(
-                    "",
-                    style: Style.defaultTextStyle,
-                  ),
-                );
-              }
-            } else {
-              return Center(
-                child: Text(
-                  'No Movies Found',
-                  style: Style.defaultTextStyle,
-                ),
-              );
-            }
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        },
-      );
+      return getSearchResults(query);
     } else {
       return Center(
         child: Text(
           "Enter keyword to start searching",
-          style: Style.defaultTextStyle.copyWith(
-            color: Style.themeWhite,
-          ),
+          style: TextStyle(),
         ),
       );
     }
   }
+}
+
+getSearchResults(query) {
+  return FutureBuilder(
+    future: SearchController().handleSearch(query, SearchType.movie),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.hasData) {
+          if (snapshot.data["status"] == "success") {
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                return MovieTile(
+                  movie: snapshot.data["results"][index],
+                );
+              },
+              itemCount: snapshot.data["results"].length,
+            );
+          } else {
+            return Center(
+              child: Text(
+                "",
+                style: Style.defaultTextStyle,
+              ),
+            );
+          }
+        } else {
+          return Center(
+            child: Text(
+              'No Movies Found',
+              style: Style.defaultTextStyle,
+            ),
+          );
+        }
+      } else {
+        return Center(child: CircularProgressIndicator());
+      }
+    },
+  );
 }
