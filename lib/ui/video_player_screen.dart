@@ -34,6 +34,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         controlsVisibleAtStart: true,
       ),
     )..addListener(playerListener);
+    _controller.toggleFullScreenMode();
     _videoMetaData = const YoutubeMetaData();
     playerState = PlayerState.unknown;
   }
@@ -61,12 +62,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               style: TextStyle(),
             ),
           ),
-          body: Center(
-            child: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: player,
-            ),
-          ),
+          body: player,
         );
       },
       player: YoutubePlayer(

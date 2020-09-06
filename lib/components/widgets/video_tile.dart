@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:movie_app/components/widgets/video_card.dart';
 import 'package:movie_app/controllers/video/video_handler.dart';
 import 'package:movie_app/models/video_model.dart';
@@ -38,11 +39,13 @@ class VideoTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    video?.name,
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.bold,
+                  Flexible(
+                    child: Text(
+                      video?.name,
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   FlatButton.icon(
@@ -58,13 +61,41 @@ class VideoTile extends StatelessWidget {
                     ),
                     onPressed: () async {
                       VideoHandler videoHandler = VideoHandler();
-                      await videoHandler.downloadVideo(
-                        video,
-                        (received, total) {
-                          //:todo handle downloading
-                          print(received);
-                        },
-                      );
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: Text("Download Video"),
+                                content: Text("Download ${video.name} ?"),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    onPressed: () async {
+                                      Fluttertoast.showToast(
+                                          msg: "Preparing Download",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.CENTER,
+                                          timeInSecForIosWeb: 3,
+                                          backgroundColor: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .color,
+                                          textColor:
+                                              Theme.of(context).primaryColor,
+                                          fontSize: 16.0);
+                                      await videoHandler.downloadVideo(
+                                        context,
+                                        video,
+                                      );
+                                    },
+                                    child: Text("Yes"),
+                                  ),
+                                  FlatButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("No"),
+                                  )
+                                ],
+                              ));
                     },
                   ),
                   Row(

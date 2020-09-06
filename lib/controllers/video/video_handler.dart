@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:movie_app/models/download_model.dart';
 import 'package:movie_app/models/video_model.dart' as VideoModel;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:dio/dio.dart';
@@ -34,19 +36,44 @@ class VideoHandler {
   }
 
   downloadVideo(
-      VideoModel.Video video, Function(int, int) onReceiveProgress) async {
+    BuildContext context,
+    VideoModel.Video video,
+  ) async {
     Dio dio = Dio();
     var status = await Permission.storage.status;
     if (status.isDenied || status.isUndetermined) {
       await Permission.storage.request();
     }
     var streamLink = await getStreamInfo(video.key);
-    print(streamLink.url);
     var filePath = await getFilePath(video.name);
-    await dio.download(
-      streamLink.url.toString(),
-      filePath,
-      onReceiveProgress: onReceiveProgress,
+    await dio.download(streamLink.url.toString(), filePath,
+        onReceiveProgress: (received, total) {
+      double progress = (received / total * 100);
+      Download download =
+          Download.fromMap({"name": "${video.name}", "path": "$filePath"});
+      _showDownloadMessage(context, progress);
+    });
+  }
+
+  void _showDownloadMessage(BuildContext context, double progress) {
+    var alert = new AlertDialog(
+      title: Text("Downloading"),
+      content: LinearProgressIndicator(
+        value: progress,
+      ),
+      actions: [
+        FlatButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text("Ok"),
+        )
+      ],
     );
+
+    showDialog(
+        context: context,
+        builder: (context) => alert,
+        barrierDismissible: false);
   }
 }

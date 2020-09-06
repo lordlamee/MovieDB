@@ -150,8 +150,10 @@ class _MovieDetailState extends State<MovieDetail> {
                             Navigator.push(
                               context,
                               CupertinoPageRoute(
-                                builder: (context) =>
-                                    MediaScreen(videos: videos),
+                                builder: (context) => MediaScreen(
+                                  videos: videos,
+                                  movie: snapshot.data,
+                                ),
                               ),
                             );
                           },

@@ -28,12 +28,10 @@ class MovieDb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: themeData(ThemeConfig.lightTheme),
-      darkTheme: themeData(ThemeConfig.darkTheme),
       debugShowCheckedModeBanner: false,
-      themeMode: Provider.of<ThemeProvider>(context).darkTheme
-          ? ThemeMode.dark
-          : ThemeMode.system,
+      theme: Provider.of<ThemeProvider>(context).darkTheme
+          ? themeData(ThemeConfig.darkTheme)
+          : themeData(ThemeConfig.lightTheme),
       home: Home(),
     );
   }
