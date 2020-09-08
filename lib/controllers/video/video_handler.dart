@@ -33,7 +33,12 @@ class VideoHandler {
   }
 
   getFilePath(fileName) async {
-    Directory directory = await getExternalStorageDirectory();
+    Directory directory;
+    if (Platform.isIOS) {
+      directory = await getApplicationDocumentsDirectory();
+    } else {
+      directory = await getExternalStorageDirectory();
+    }
     return "${directory.path}/Downloads/$fileName.mp4";
   }
 

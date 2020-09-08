@@ -26,7 +26,6 @@ class DatabaseProvider {
   }
 
   getDb() async {
-    String dbPath = await getDatabasesPath();
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     final Database database = await openDatabase(
       join(documentDirectory.path, "downloadsDB.db"),
