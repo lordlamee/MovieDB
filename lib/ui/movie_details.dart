@@ -7,8 +7,10 @@ import 'package:movie_app/controllers/recommendations_controller.dart';
 import 'package:movie_app/controllers/video/video_controller.dart';
 import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/models/video_model.dart';
+import 'package:movie_app/provider/theme_provide.dart';
 import 'package:movie_app/ui/media_screen.dart';
 import 'package:movie_app/utilities/constants.dart';
+import 'package:provider/provider.dart';
 
 class MovieDetail extends StatefulWidget {
   final String movieId;
@@ -145,20 +147,29 @@ class _MovieDetailState extends State<MovieDetail> {
                       ),
                       Visibility(
                         visible: videos.isNotEmpty,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => MediaScreen(
-                                  videos: videos,
-                                  movie: snapshot.data,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            left: 16,
+                          ),
+                          child: FlatButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              side: BorderSide(width: 1),
+                            ),
+                            color: Provider.of<ThemeProvider>(context).darkTheme
+                                ? Colors.black
+                                : Colors.white,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => MediaScreen(
+                                    videos: videos,
+                                    movie: snapshot.data,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 16),
+                              );
+                            },
                             child: Text(
                               "Videos and trailers",
                               style: TextStyle(

@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/components/widgets/build_functions.dart';
 import 'package:movie_app/models/movie_model.dart';
+import 'package:movie_app/provider/theme_provide.dart';
 import 'package:movie_app/ui/movie_details.dart';
 import 'package:movie_app/utilities/constants.dart';
 import 'package:movie_app/utilities/styles.dart' as Style;
+import 'package:provider/provider.dart';
 
 class MovieTile extends StatelessWidget {
   const MovieTile({
@@ -50,7 +52,9 @@ class MovieTile extends StatelessWidget {
               child: Container(
                 height: 150,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).textTheme.bodyText1.color,
+                  color: Provider.of<ThemeProvider>(context).darkTheme
+                      ? Colors.white
+                      : Colors.black,
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(10),
                     bottomRight: Radius.circular(10),

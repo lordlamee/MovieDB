@@ -33,29 +33,27 @@ class _DownloadAlertState extends State<DownloadAlert> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
-      child: Scaffold(
-        body: SimpleDialog(
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          title: Text(
-            "Downloading...",
-            style: TextStyle(),
-          ),
-          children: [
-            LinearProgressIndicator(
-              minHeight: 8,
-              value: progress / 100,
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Text(
-              "${progress.floor()} %",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+      child: SimpleDialog(
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        title: Text(
+          "Downloading...",
+          style: TextStyle(),
         ),
+        children: [
+          LinearProgressIndicator(
+            minHeight: 8,
+            value: progress / 100,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Text(
+            "${progress.floor()} %",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }

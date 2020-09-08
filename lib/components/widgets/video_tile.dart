@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:movie_app/components/widgets/download_alert.dart';
 import 'package:movie_app/components/widgets/video_card.dart';
-import 'package:movie_app/controllers/video/video_handler.dart';
 import 'package:movie_app/models/video_model.dart';
+import 'package:movie_app/provider/theme_provide.dart';
 import 'package:movie_app/ui/video_player_screen.dart';
+import 'package:provider/provider.dart';
 
 class VideoTile extends StatelessWidget {
   VideoTile({this.video});
@@ -34,7 +35,9 @@ class VideoTile extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              color: Theme.of(context).textTheme.bodyText1.color,
+              color: Provider.of<ThemeProvider>(context).darkTheme
+                  ? Colors.white
+                  : Colors.black,
               padding: EdgeInsets.all(8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,7 +64,6 @@ class VideoTile extends StatelessWidget {
                       ),
                     ),
                     onPressed: () async {
-                      VideoHandler videoHandler = VideoHandler();
                       showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
@@ -82,13 +84,12 @@ class VideoTile extends StatelessWidget {
                                           textColor:
                                               Theme.of(context).primaryColor,
                                           fontSize: 16.0);
-                                      bool done = await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => DownloadAlert(
-                                              video: video,
-                                            ),
-                                          ));
+                                      bool done = await showDialog(
+                                        context: context,
+                                        builder: (context) => DownloadAlert(
+                                          video: video,
+                                        ),
+                                      );
                                       if (done) {
                                         Navigator.pop(context);
                                       }

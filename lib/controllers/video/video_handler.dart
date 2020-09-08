@@ -46,17 +46,21 @@ class VideoHandler {
     }
     var streamLink = await getStreamInfo(video.key);
     var filePath = await getFilePath(video.name);
-    await dio.download(streamLink.url.toString(), filePath,
-        onReceiveProgress: (received, total) {
-      double progress = (received / total * 100);
-      progressReceiveFunction(progress);
-      if (received == total) {
-        Download download = Download.fromMap({
-          DatabaseProvider.COLUMN_NAME: video.name,
-          DatabaseProvider.COLUMN_PATH: filePath,
-        });
-        DatabaseProvider.db.saveDownload(download);
-      }
-    });
+    await dio.download(
+      streamLink.url.toString(),
+      filePath,
+      onReceiveProgress: (received, total) {
+        double progress = (received / total * 100);
+        progressReceiveFunction(progress);
+        if (received == total) {
+          Download download = Download.fromMap({
+            DatabaseProvider.COLUMN_NAME: video.name,
+            DatabaseProvider.COLUMN_PATH: filePath,
+          });
+          DatabaseProvider.db.saveDownload(download);
+        }
+      },
+      deleteOnError: true,
+    );
   }
 }
