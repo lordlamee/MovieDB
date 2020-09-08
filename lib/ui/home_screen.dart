@@ -15,6 +15,8 @@ import 'package:movie_app/ui/search_delegate.dart';
 import 'package:movie_app/utilities/constants.dart';
 import 'package:provider/provider.dart';
 
+import 'downloads_screen.dart';
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -83,6 +85,22 @@ class _HomeState extends State<Home> {
           icon: Icon(Icons.format_paint),
         ),
         actions: [
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => DownloadsScreen(),
+                  ));
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              child: Text(
+                "Downloads",
+                style: TextStyle(),
+              ),
+            ),
+          ),
           buildSearchIcon(context, MoviesSearchDelegate()),
           SizedBox(
             width: 16,

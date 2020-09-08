@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:movie_app/components/widgets/download_alert.dart';
 import 'package:movie_app/components/widgets/video_card.dart';
 import 'package:movie_app/controllers/video/video_handler.dart';
 import 'package:movie_app/models/video_model.dart';
@@ -81,10 +82,16 @@ class VideoTile extends StatelessWidget {
                                           textColor:
                                               Theme.of(context).primaryColor,
                                           fontSize: 16.0);
-                                      await videoHandler.downloadVideo(
-                                        context,
-                                        video,
-                                      );
+                                      bool done = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => DownloadAlert(
+                                              video: video,
+                                            ),
+                                          ));
+                                      if (done) {
+                                        Navigator.pop(context);
+                                      }
                                     },
                                     child: Text("Yes"),
                                   ),

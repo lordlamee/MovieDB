@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:movie_app/database/database.dart';
 import 'package:movie_app/models/download_model.dart';
 import 'package:movie_app/models/video_model.dart' as VideoModel;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
@@ -9,6 +10,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 class VideoHandler {
   YoutubeExplode youtubeExplode = YoutubeExplode();
+
   getMetaData(String videoId) async {
     var video = await youtubeExplode.videos.get(videoId);
     if (video != null) {
@@ -35,10 +37,8 @@ class VideoHandler {
     return "${directory.path}/Downloads/$fileName.mp4";
   }
 
-  downloadVideo(
-    BuildContext context,
-    VideoModel.Video video,
-  ) async {
+  downloadVideo(BuildContext context, VideoModel.Video video,
+      Function(double) progressReceiveFunction) async {
     Dio dio = Dio();
     var status = await Permission.storage.status;
     if (status.isDenied || status.isUndetermined) {
@@ -49,31 +49,14 @@ class VideoHandler {
     await dio.download(streamLink.url.toString(), filePath,
         onReceiveProgress: (received, total) {
       double progress = (received / total * 100);
-      Download download =
-          Download.fromMap({"name": "${video.name}", "path": "$filePath"});
-      _showDownloadMessage(context, progress);
+      progressReceiveFunction(progress);
+      if (received == total) {
+        Download download = Download.fromMap({
+          DatabaseProvider.COLUMN_NAME: video.name,
+          DatabaseProvider.COLUMN_PATH: filePath,
+        });
+        DatabaseProvider.db.saveDownload(download);
+      }
     });
-  }
-
-  void _showDownloadMessage(BuildContext context, double progress) {
-    var alert = new AlertDialog(
-      title: Text("Downloading"),
-      content: LinearProgressIndicator(
-        value: progress,
-      ),
-      actions: [
-        FlatButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text("Ok"),
-        )
-      ],
-    );
-
-    showDialog(
-        context: context,
-        builder: (context) => alert,
-        barrierDismissible: false);
   }
 }
