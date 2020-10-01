@@ -5,6 +5,8 @@ import 'package:movie_app/models/enums/search_type_enum.dart';
 import 'package:movie_app/utilities/styles.dart' as Style;
 
 class MoviesSearchDelegate extends SearchDelegate {
+  MoviesSearchDelegate({String hintText}) : super(searchFieldLabel: hintText);
+
   @override
   ThemeData appBarTheme(BuildContext context) {
     assert(context != null);
@@ -36,7 +38,6 @@ class MoviesSearchDelegate extends SearchDelegate {
   }
 
   @override
-  // ignore: missing_return
   Widget buildResults(BuildContext context) {
     if (query != "" && query != null) {
       return getSearchResults(query);

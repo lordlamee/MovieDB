@@ -34,7 +34,7 @@ class DiscoverCard extends StatelessWidget {
         ),
         margin: EdgeInsets.fromLTRB(16, 0, 16, 12),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(11),
+          borderRadius: BorderRadius.circular(5),
           image: DecorationImage(
             image: NetworkImage(
                 "https://image.tmdb.org/t/p/w500${movie?.imageUrl}"),
@@ -43,10 +43,16 @@ class DiscoverCard extends StatelessWidget {
         ),
         child: Align(
           alignment: Alignment.bottomLeft,
-          child: Text(
-            movie?.movieName ?? "",
-            style: Style.defaultTextStyle.copyWith(
-              fontSize: 18,
+          child: Container(
+            color: Color(0xFFFCFDFE).withOpacity(0.6),
+            padding: EdgeInsets.all(4),
+            child: Text(
+              movie?.movieName ?? "",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
           ),
         ),

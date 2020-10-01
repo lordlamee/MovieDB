@@ -4,19 +4,19 @@ class ThemeConfig {
   //Colors for theme
   static Color lightPrimary = Color(0xfffcfcff);
   static Color darkPrimary = Color(0xff1f1f1f);
-  static Color lightAccent = Color(0xFFFFCE31);
+  // static Color lightAccent = Color(0xFFFFCE31);
+  static Color lightAccent = Color(0xFFC87D0C);
   static Color darkAccent = Color(0xFFFFCE31);
   static Color lightBG = Color(0xfffcfcff);
   static Color darkBG = Color(0xff121212);
 
-  static Color backgroundBlack = Color(0xFF161616);
+  static Color backgroundBlack = Color(0xFF272C31);
   static Color defaultWhite = Color(0xFFFFFFFF);
   static Color themeWhite = Color(0xFFFCFCFC);
   static Color textBlack = Color(0xFF1F1F1F);
   static Color appYellow = Color(0xFFFFCE31);
   static Color textGrey = Color(0xFF696969);
   static Color themeGrey = Color(0xFF8E8D8D);
-
 
   static ThemeData lightTheme = ThemeData(
     backgroundColor: lightBG,

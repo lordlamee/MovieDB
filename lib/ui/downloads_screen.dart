@@ -51,8 +51,7 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                           );
                           await androidIntent.launch();
                         } else {
-                          String result = await openFile(videoFile.path);
-                          //  showDialog(context: context,builder: ())
+                          await openFile(videoFile.path);
                         }
                       },
                       title: Text(
