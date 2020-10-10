@@ -37,8 +37,8 @@ class MovieTile extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-                bottomLeft: Radius.circular(10),
+                topLeft: Radius.circular(5),
+                bottomLeft: Radius.circular(5),
               ),
               child: FadeInImage.assetNetwork(
                 width: 110,
@@ -56,8 +56,8 @@ class MovieTile extends StatelessWidget {
                       ? Colors.white
                       : Colors.black,
                   borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
+                    topRight: Radius.circular(5),
+                    bottomRight: Radius.circular(5),
                   ),
                 ),
                 padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),

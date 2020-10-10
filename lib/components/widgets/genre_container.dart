@@ -9,17 +9,20 @@ class GenreContainer extends StatelessWidget {
       margin: EdgeInsets.only(left: 8),
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(8),
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
+        ),
         border: Border.all(
-          color: Theme.of(context).textTheme.bodyText1.color,
+          color: Theme.of(context).accentColor,
           width: 1,
         ),
       ),
       child: Text(
         genre ?? "",
         style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
+          fontSize: 14,
         ),
       ),
     );

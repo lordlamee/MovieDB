@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_app/provider/downloads_provider.dart';
+import 'package:movie_app/provider/movie_provider.dart';
 import 'package:movie_app/provider/page_indicator_provider.dart';
 import 'package:movie_app/provider/theme_provide.dart';
 import 'package:movie_app/theme/theme_config.dart';
@@ -20,6 +21,7 @@ class MovieApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => PageIndicatorProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => DownloadsProvider()),
+        ChangeNotifierProvider(create: (_) => MovieViewModel()),
       ],
       child: MovieDb(),
     );
@@ -40,7 +42,7 @@ class MovieDb extends StatelessWidget {
 
   ThemeData themeData(ThemeData theme) {
     return theme.copyWith(
-      textTheme: GoogleFonts.openSansTextTheme(
+      textTheme: GoogleFonts.quicksandTextTheme(
         theme.textTheme,
       ),
     );

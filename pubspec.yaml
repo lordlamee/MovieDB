@@ -27,11 +27,15 @@ dependencies:
   fluttertoast: ^7.0.4
   android_intent: ^0.3.7+3
   open_file: ^3.0.1
+  carousel_slider: ^2.3.1
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.7.4
   flutter_test:
     sdk: flutter
-
+flutter_icons:
+  android: true
+  image_path: "assets/movieapplogo.png"
 flutter:
   uses-material-design: true
 

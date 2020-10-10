@@ -15,6 +15,9 @@ class VideoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 150,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+      ),
       child: Row(
         children: [
           InkWell(
@@ -45,7 +48,7 @@ class VideoTile extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Text(
-                      video?.name,
+                      video?.name ?? "",
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold,

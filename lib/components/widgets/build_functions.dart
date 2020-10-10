@@ -53,13 +53,17 @@ class RowHeading extends StatelessWidget {
                 fontSize: 20,
               ),
             ),
-            Text(
-              "See all",
-              style: TextStyle(
-                color:
-                    Theme.of(context).textTheme.caption.color.withOpacity(0.8),
-                fontSize: 15,
-              ),
+            // Text(
+            //   "swipe to see all",
+            //   style: TextStyle(
+            //     color:
+            //     Theme.of(context).textTheme.caption.color.withOpacity(0.8),
+            //     fontSize: 15,
+            //   ),
+            // ),
+            Transform.rotate(
+              angle: 22 / 7,
+              child: Icon(Icons.backspace),
             ),
           ]),
     );
